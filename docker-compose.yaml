@@ -1,0 +1,30 @@
+---
+version: "3"
+services:
+  mariadb:
+    image: mariadb:10.6
+    volumes:
+      - mariadb_data:/var/lib/mysql
+      - "./students.sql:/docker-entrypoint-initdb.d/students.sql"
+    restart: always
+    environment:
+      MYSQL_DATABASE_HOST: mariadb
+      MYSQL_DATABASE_USER: delpiero
+      MYSQL_DATABASE_PASSWORD: juve
+      MYSQL_DATABASE_DB: exo3
+    
+
+  flask-app:
+    build: .
+    image: waed/capge-exo3:1.0.0
+    ports:
+    - 5000:5000
+    depends_on:
+    - mariadb
+    restart: always
+    volumes:
+    - "./webserver:/app/webserver"
+
+volumes:
+  mariadb_data: {}
+
